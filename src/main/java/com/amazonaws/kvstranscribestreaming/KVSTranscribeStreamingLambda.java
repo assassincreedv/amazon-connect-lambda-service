@@ -71,6 +71,8 @@ import java.util.concurrent.TimeoutException;
  */
 public class KVSTranscribeStreamingLambda implements RequestHandler<Object, String> {
 
+    private final String hostUrl = "https://apiv3.hitalentech.com/voip";
+
     private static final Logger logger = LoggerFactory.getLogger(KVSTranscribeStreamingLambda.class);
 
     /**
@@ -91,16 +93,18 @@ public class KVSTranscribeStreamingLambda implements RequestHandler<Object, Stri
             ObjectMapper mapper = new ObjectMapper();
             String jsonString = mapper.writeValueAsString(object);
             JsonNode rootNode = mapper.readTree(jsonString);
+            String phone = rootNode.path("Details").path("ContactData").path("CustomerEndpoint").path("Address").asText();
             String contactId = rootNode.path("Details").path("ContactData").path("ContactId").asText();
             String streamARN = rootNode.path("Details").path("ContactData").path("MediaStreams").path("Customer").path("Audio").path("StreamARN").asText();
             String startFragmentNumber = rootNode.path("Details").path("ContactData").path("MediaStreams").path("Customer").path("Audio").path("StartFragmentNumber").asText();
-
-            ConnectTranscriptionRequest connectTranscriptionRequest = new ConnectTranscriptionRequest(streamARN, startFragmentNumber,contactId);
+            String accountARN =  rootNode.path("Details").path("Parameters").path("agentARN").asText();
+            logger.info("accountARN: " + accountARN);
+            ConnectTranscriptionRequest connectTranscriptionRequest = new ConnectTranscriptionRequest(phone, streamARN, startFragmentNumber,contactId, accountARN);
             // 创建HttpClient实例
             HttpClient client = HttpClients.createDefault();
 
             // 创建HttpPost实例
-            HttpPost post = new HttpPost("http://44.241.137.220:8082/api/v1/connect/live-transcription");
+            HttpPost post = new HttpPost(hostUrl + "/api/v3/connect/live-transcription/aliCloud");
             post.setHeader("Content-Type", "application/json");
             String jsonBody = mapper.writeValueAsString(connectTranscriptionRequest);
             post.setEntity(new StringEntity(jsonBody));

@@ -1,6 +1,8 @@
 # Build
 dist/.DS_Store
 .gradle/*
+!gradle-wrapper.jar
+gradle-app.setting
 build/
 # Due to VSCode Java plugin; see https://github.com/redhat-developer/vscode-java/issues/634
 bin/ 
@@ -39,3 +41,29 @@ Icon
 
 # Thumbnails
 ._*
+
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries
+.idea/vcs.xml
+.idea/jsLibraryMappings.xml
+
+# Sensitive or high-churn files:
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# Gradle:
+.idea/gradle.xml
+.idea/libraries
+
+# Sonarlint
+.idea/sonarlint
+
+# Mongo Explorer plugin:
+.idea/mongoSettings.xml
+
